@@ -1,14 +1,21 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
+import { ReactLenis, type LenisRef } from 'lenis/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useApp, effectiveTier } from '@/lib/store'
 import { t } from '@/lib/i18n'
 import type { Tier } from '@/lib/quality'
+import { usePrefersReducedMotion } from '@/lib/hooks'
 import Sections from '@/components/dom/Sections'
 import Hud from '@/components/dom/Hud'
 
 const WorldCanvas = dynamic(() => import('@/components/world/World'), { ssr: false })
+
+// Experience é SSR-renderizado (client component ainda roda no servidor) — guard obrigatório
+if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
 
 function webglSupported(): boolean {
   try {
@@ -24,12 +31,28 @@ export default function Experience() {
   const tier = useApp((s) => effectiveTier(s))
   const setTierOverride = useApp((s) => s.setTierOverride)
   const [webgl, setWebgl] = useState<boolean | null>(null)
+  const reduced = usePrefersReducedMotion()
+  const lenisRef = useRef<LenisRef>(null)
 
   useEffect(() => {
     const root = document.documentElement
     root.lang = lang
     if (!root.dataset.section) root.dataset.section = 'hero'
   }, [lang])
+
+  useEffect(() => {
+    document.documentElement.dataset.reduced = String(reduced)
+    if (reduced) return
+    const update = () => ScrollTrigger.update()
+    const raf = (time: number) => lenisRef.current?.lenis?.raf(time * 1000)
+    lenisRef.current?.lenis?.on('scroll', update)
+    gsap.ticker.add(raf)
+    gsap.ticker.lagSmoothing(0)
+    return () => {
+      gsap.ticker.remove(raf)
+      lenisRef.current?.lenis?.off('scroll', update)
+    }
+  }, [reduced])
 
   useEffect(() => {
     // ?tier=N força o tier (para testes e debug)
@@ -46,7 +69,7 @@ export default function Experience() {
 
   const show3d = webgl === true && tier > 0
 
-  return (
+  const content = (
     <>
       <a className="skip-link" href="#projects">{t(lang, 'a11y.skip')}</a>
       {show3d ? <WorldCanvas /> : webgl !== null ? (
@@ -59,5 +82,11 @@ export default function Experience() {
       </main>
       <Hud />
     </>
+  )
+
+  return reduced ? content : (
+    <ReactLenis root options={{ autoRaf: false }} ref={lenisRef}>
+      {content}
+    </ReactLenis>
   )
 }

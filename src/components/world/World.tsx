@@ -5,8 +5,9 @@ import { Canvas } from '@react-three/fiber'
 import { useDetectGPU } from '@react-three/drei'
 import { useApp, effectiveTier } from '@/lib/store'
 import { profileFor, tierFrom } from '@/lib/quality'
-import { useIsMobile } from '@/lib/hooks'
+import { useIsMobile, usePrefersReducedMotion } from '@/lib/hooks'
 import WorldEnv from './WorldEnv'
+import CameraRig from './CameraRig'
 
 function TierProbe({ isMobile }: { isMobile: boolean }) {
   const gpu = useDetectGPU()
@@ -22,6 +23,7 @@ export default function World() {
   const tier = useApp((s) => effectiveTier(s))
   const isMobile = useIsMobile()
   const profile = profileFor(tier, isMobile)
+  const reduced = usePrefersReducedMotion()
 
   return (
     <div className="world" aria-hidden>
@@ -34,6 +36,7 @@ export default function World() {
           <TierProbe isMobile={isMobile} />
           <WorldEnv />
           {/* LAYERS — Tasks 9–17 penduram aqui: CameraRig, City, Rain, Cloud/Towers/Transit/Underground/Terminal, Effects */}
+          <CameraRig reduced={reduced} />
         </Suspense>
       </Canvas>
     </div>

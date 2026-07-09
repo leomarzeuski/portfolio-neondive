@@ -51,3 +51,18 @@ test.describe('mundo 3d', () => {
     await expect(page.locator('html')).toHaveAttribute('data-tier', '0')
   })
 })
+
+test.describe('mergulho por scroll', () => {
+  test('scroll até o fim percorre as seções e enche o altímetro', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('.world canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('html')).toHaveAttribute('data-section', 'hero')
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight * 0.55))
+    await expect(page.locator('html')).toHaveAttribute('data-section', 'journey', { timeout: 10_000 })
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await expect(page.locator('html')).toHaveAttribute('data-section', 'contact', { timeout: 10_000 })
+    await expect
+      .poll(async () => Number(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--dive'))), { timeout: 10_000 })
+      .toBeGreaterThan(0.95)
+  })
+})
