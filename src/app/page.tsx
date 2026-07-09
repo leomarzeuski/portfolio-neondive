@@ -1,7 +1,5 @@
+import Experience from '@/components/Experience'
+
 export default function Home() {
-  return (
-    <main id="scroll-root">
-      <h1>NEON DIVE — under construction</h1>
-    </main>
-  )
+  return <Experience />
 }
