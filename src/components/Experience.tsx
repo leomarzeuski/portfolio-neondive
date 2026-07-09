@@ -9,10 +9,12 @@ import { useApp, effectiveTier } from '@/lib/store'
 import { t } from '@/lib/i18n'
 import type { Tier } from '@/lib/quality'
 import { usePrefersReducedMotion } from '@/lib/hooks'
+import { createKonami } from '@/lib/konami'
 import Sections from '@/components/dom/Sections'
 import Hud from '@/components/dom/Hud'
 import ProjectModal from '@/components/dom/ProjectModal'
 import BootOverlay from '@/components/dom/BootOverlay'
+import CursorTrail from '@/components/dom/CursorTrail'
 
 const WorldCanvas = dynamic(() => import('@/components/world/World'), { ssr: false })
 
@@ -32,9 +34,21 @@ export default function Experience() {
   const lang = useApp((s) => s.lang)
   const tier = useApp((s) => effectiveTier(s))
   const setTierOverride = useApp((s) => s.setTierOverride)
+  const synthwave = useApp((s) => s.synthwave)
   const [webgl, setWebgl] = useState<boolean | null>(null)
   const reduced = usePrefersReducedMotion()
   const lenisRef = useRef<LenisRef>(null)
+
+  useEffect(() => {
+    const feed = createKonami(() => useApp.getState().toggleSynthwave())
+    const onKey = (e: KeyboardEvent) => feed(e)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  useEffect(() => {
+    document.body.classList.toggle('synthwave', synthwave)
+  }, [synthwave])
 
   useEffect(() => {
     const root = document.documentElement
@@ -83,6 +97,7 @@ export default function Experience() {
         <Sections />
       </main>
       <Hud />
+      <CursorTrail />
       <ProjectModal />
       <BootOverlay />
     </>

@@ -124,3 +124,16 @@ test.describe('modal de projeto', () => {
     await expect(dialog).toHaveCount(0)
   })
 })
+
+test.describe('konami synthwave', () => {
+  test('sequência konami liga/desliga modo synthwave com toast', async ({ page }) => {
+    await page.goto('/?noboot=1')
+    await expect(page.locator('html')).toHaveAttribute('data-section', 'hero')
+    const seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+    for (const key of seq) await page.keyboard.press(key)
+    await expect(page.locator('body')).toHaveClass(/synthwave/)
+    await expect(page.getByRole('status').filter({ hasText: /SYNTHWAVE/ })).toBeVisible()
+    for (const key of seq) await page.keyboard.press(key)
+    await expect(page.locator('body')).not.toHaveClass(/synthwave/)
+  })
+})

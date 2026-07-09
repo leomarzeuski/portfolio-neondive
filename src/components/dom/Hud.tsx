@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useApp } from '@/lib/store'
 import { t } from '@/lib/i18n'
 import { SECTIONS } from '@/lib/curve'
@@ -23,6 +23,15 @@ export default function Hud() {
   const setTierOverride = useApp((s) => s.setTierOverride)
   const synthwave = useApp((s) => s.synthwave)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [toastVisible, setToastVisible] = useState(false)
+  const firstSynth = useRef(true)
+
+  useEffect(() => {
+    if (firstSynth.current) { firstSynth.current = false; return }
+    setToastVisible(true)
+    const id = setTimeout(() => setToastVisible(false), 2600)
+    return () => clearTimeout(id)
+  }, [synthwave])
 
   return (
     <div className={styles.hud} aria-label="HUD">
@@ -65,7 +74,7 @@ export default function Hud() {
         <span className={styles.alt_label}>{t(lang, 'hud.altitude')}</span>
       </nav>
 
-      <div className={`${styles.toast} ${synthwave ? styles.toastOn : ''}`} role="status">
+      <div className={`${styles.toast} ${toastVisible ? styles.toastOn : ''}`} role="status">
         {t(lang, 'konami.toast')}
       </div>
     </div>

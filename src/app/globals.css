@@ -162,3 +162,16 @@ main#scroll-root { position: relative; z-index: 1; pointer-events: none; }
   justify-self: start; font-family: var(--font-mono); font-size: 12px;
   color: var(--cyan); text-decoration: underline;
 }
+
+body.synthwave {
+  --cyan: #ff6ad5;
+  --magenta: #8b5cf6;
+  --line: rgba(255, 106, 213, 0.3);
+}
+
+.cursor-trail {
+  position: fixed; top: -14px; left: -14px; z-index: 15; width: 28px; height: 28px;
+  border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.5), rgba(232, 121, 249, 0.12) 60%, transparent 70%);
+}
+@media (pointer: coarse) { .cursor-trail { display: none; } }
