@@ -1,0 +1,9 @@
+:root {
+  --bg: #050510;
+  --ink: #e6edff;
+  --cyan: #22d3ee;
+  --magenta: #e879f9;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); color: var(--ink); }
+body { font-family: var(--font-display), system-ui, sans-serif; }
