@@ -9,6 +9,7 @@ import { useIsMobile, usePrefersReducedMotion } from '@/lib/hooks'
 import WorldEnv from './WorldEnv'
 import CameraRig from './CameraRig'
 import City from './City'
+import CloudLayer from './layers/CloudLayer'
 import Effects from './Effects'
 
 function TierProbe({ isMobile }: { isMobile: boolean }) {
@@ -40,6 +41,7 @@ export default function World() {
           {/* LAYERS — Tasks 9–17 penduram aqui: CameraRig, City, Rain, Cloud/Towers/Transit/Underground/Terminal, Effects */}
           <CameraRig reduced={reduced} />
           <City />
+          <CloudLayer />
           <Effects />
         </Suspense>
       </Canvas>
