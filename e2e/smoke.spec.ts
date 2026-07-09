@@ -79,6 +79,25 @@ test.describe('mergulho por scroll', () => {
   })
 })
 
+test.describe('contato', () => {
+  test('form inválido mostra erro; válido monta mailto', async ({ page }) => {
+    await page.goto('/?noboot=1')
+    await page.locator('#contact').scrollIntoViewIfNeeded()
+    await page.getByLabel(/NAME|NOME/).fill('A')
+    await page.getByRole('button', { name: /TRANSMIT|TRANSMITIR/ }).click()
+    await expect(page.locator('#contact .form-status')).toContainText('ERR')
+    await page.getByLabel(/NAME|NOME/).fill('Ana Recruiter')
+    await page.getByLabel(/E-MAIL/).fill('ana@empresa.com')
+    await page.getByLabel(/MESSAGE|MENSAGEM/).fill('Adorei o portfólio, vamos conversar!')
+    await page.getByRole('button', { name: /TRANSMIT|TRANSMITIR/ }).click()
+    const link = page.locator('#contact a.open-mail')
+    await expect(link).toBeVisible()
+    const href = await link.getAttribute('href')
+    expect(href).toContain('mailto:leomarzeuskii@gmail.com')
+    expect(href).toContain(encodeURIComponent('Ana Recruiter'))
+  })
+})
+
 test.describe('modal de projeto', () => {
   test('abre pelo card DOM, mostra conteúdo real e fecha com ESC', async ({ page }) => {
     await page.goto('/')

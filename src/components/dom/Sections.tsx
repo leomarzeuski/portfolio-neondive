@@ -3,6 +3,7 @@
 import { useApp } from '@/lib/store'
 import { t } from '@/lib/i18n'
 import { PROJECTS, TIMELINE, SKILLS, SOCIALS } from '@/lib/content'
+import ContactForm from './ContactForm'
 
 export default function Sections() {
   const lang = useApp((s) => s.lang)
@@ -81,6 +82,7 @@ export default function Sections() {
           <p className="eyebrow">{t(lang, 'sec.contact.eyebrow')}</p>
           <h2 className="title">{t(lang, 'sec.contact.title')}</h2>
           <p className="sub">{t(lang, 'sec.contact.sub')}</p>
+          <ContactForm />
           <ul className="socials">
             {SOCIALS.map((s) => (
               <li key={s.label}>

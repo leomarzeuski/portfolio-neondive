@@ -142,3 +142,23 @@ main#scroll-root { position: relative; z-index: 1; pointer-events: none; }
   position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
   font-family: var(--font-mono); font-size: 10px; color: var(--ink-dim); letter-spacing: 0.2em;
 }
+
+.contact-form { display: grid; gap: 12px; margin-top: 22px; text-align: left; }
+.contact-form label {
+  display: grid; gap: 6px; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.18em; color: var(--cyan);
+}
+.contact-form input, .contact-form textarea {
+  padding: 11px 12px; font-family: var(--font-mono); font-size: 14px; color: var(--ink);
+  background: rgba(5, 6, 18, 0.8); border: 1px solid var(--line); border-radius: 2px;
+  outline: none; resize: vertical;
+}
+.contact-form input:focus-visible, .contact-form textarea:focus-visible {
+  border-color: var(--cyan); box-shadow: 0 0 14px rgba(34, 211, 238, 0.3);
+}
+.contact-form .cta { border: none; cursor: pointer; justify-self: start; }
+.form-status { font-family: var(--font-mono); font-size: 12px; color: var(--magenta); }
+.open-mail {
+  justify-self: start; font-family: var(--font-mono); font-size: 12px;
+  color: var(--cyan); text-decoration: underline;
+}

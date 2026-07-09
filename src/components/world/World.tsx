@@ -14,6 +14,7 @@ import Rain from './Rain'
 import TowersLayer from './layers/TowersLayer'
 import TransitLayer from './layers/TransitLayer'
 import UndergroundLayer from './layers/UndergroundLayer'
+import TerminalLayer from './layers/TerminalLayer'
 import Effects from './Effects'
 
 function TierProbe({ isMobile }: { isMobile: boolean }) {
@@ -50,6 +51,7 @@ export default function World() {
           <TowersLayer />
           <TransitLayer />
           <UndergroundLayer />
+          <TerminalLayer />
           <Effects />
         </Suspense>
       </Canvas>
