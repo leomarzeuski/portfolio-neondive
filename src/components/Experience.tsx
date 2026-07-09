@@ -11,6 +11,7 @@ import type { Tier } from '@/lib/quality'
 import { usePrefersReducedMotion } from '@/lib/hooks'
 import Sections from '@/components/dom/Sections'
 import Hud from '@/components/dom/Hud'
+import ProjectModal from '@/components/dom/ProjectModal'
 
 const WorldCanvas = dynamic(() => import('@/components/world/World'), { ssr: false })
 
@@ -81,6 +82,7 @@ export default function Experience() {
         <Sections />
       </main>
       <Hud />
+      <ProjectModal />
     </>
   )
 

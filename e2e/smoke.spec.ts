@@ -78,3 +78,17 @@ test.describe('mergulho por scroll', () => {
       .toBeGreaterThan(0.95)
   })
 })
+
+test.describe('modal de projeto', () => {
+  test('abre pelo card DOM, mostra conteúdo real e fecha com ESC', async ({ page }) => {
+    await page.goto('/')
+    await page.locator('#projects .card', { hasText: 'GlassGPT' }).getByRole('button').click()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await expect(dialog).toContainText('// BRIEFING')
+    await expect(dialog).toContainText('autograd')
+    await expect(dialog.getByRole('link', { name: /CODE/ })).toHaveAttribute('href', 'https://github.com/leomarzeuski/glassgpt')
+    await page.keyboard.press('Escape')
+    await expect(dialog).toHaveCount(0)
+  })
+})
