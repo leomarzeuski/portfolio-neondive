@@ -14,3 +14,29 @@ test.describe('seções e conteúdo', () => {
     await expect(page.locator('#contact')).toContainText('leomarzeuskii@gmail.com')
   })
 })
+
+test.describe('hud', () => {
+  test('toggle PT/EN troca o conteúdo e persiste', async ({ page }) => {
+    await page.goto('/')
+    await page.evaluate(() => localStorage.removeItem('neondive'))
+    await page.reload()
+    // Click language toggle button (first button in HUD controls)
+    await page.locator('[aria-label="HUD"] div > button').first().click()
+    await expect(page.locator('#hero')).toContainText('Olá, eu sou')
+    await page.reload()
+    await expect(page.locator('#hero')).toContainText('Olá, eu sou')
+    // Click language toggle button again
+    await page.locator('[aria-label="HUD"] div > button').first().click()
+    await expect(page.locator('#hero')).toContainText("Hi, I'm")
+  })
+  test('settings define qualidade manual', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /SETTINGS/i }).click()
+    await page.getByLabel(/LOW|BAIXA/i).check()
+    await expect(page.getByLabel(/LOW|BAIXA/i)).toBeChecked()
+  })
+  test('altímetro tem 5 marcadores-âncora', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('[data-testid="altimeter"] a')).toHaveCount(5)
+  })
+})
