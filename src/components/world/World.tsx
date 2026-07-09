@@ -10,6 +10,7 @@ import WorldEnv from './WorldEnv'
 import CameraRig from './CameraRig'
 import City from './City'
 import CloudLayer from './layers/CloudLayer'
+import Rain from './Rain'
 import Effects from './Effects'
 
 function TierProbe({ isMobile }: { isMobile: boolean }) {
@@ -42,6 +43,7 @@ export default function World() {
           <CameraRig reduced={reduced} />
           <City />
           <CloudLayer />
+          <Rain />
           <Effects />
         </Suspense>
       </Canvas>
