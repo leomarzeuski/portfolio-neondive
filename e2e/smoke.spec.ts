@@ -36,3 +36,18 @@ test.describe('hud', () => {
     await expect(page.locator('[data-testid="altimeter"] a')).toHaveCount(5)
   })
 })
+
+test.describe('mundo 3d', () => {
+  test('canvas monta por padrão', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('.world canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('html')).toHaveAttribute('data-tier', /[123]/)
+  })
+  test('?tier=0 usa fallback estático com conteúdo íntegro', async ({ page }) => {
+    await page.goto('/?tier=0')
+    await expect(page.locator('.static-fallback')).toBeVisible()
+    await expect(page.locator('.world canvas')).toHaveCount(0)
+    await expect(page.locator('#projects .card')).toHaveCount(6)
+    await expect(page.locator('html')).toHaveAttribute('data-tier', '0')
+  })
+})

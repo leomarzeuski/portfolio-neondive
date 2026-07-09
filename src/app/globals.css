@@ -127,3 +127,18 @@ main#scroll-root { position: relative; z-index: 1; pointer-events: none; }
   .panel { margin: 0 auto; width: min(520px, 94vw); padding: 18px; }
   .sec { justify-content: center !important; }
 }
+
+.world { position: fixed; inset: 0; z-index: 0; }
+.world canvas { display: block; }
+
+.static-fallback {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232, 121, 249, 0.18), transparent),
+    radial-gradient(ellipse 60% 40% at 20% 110%, rgba(34, 211, 238, 0.14), transparent),
+    linear-gradient(180deg, #0a0a1e 0%, #050510 55%, #02020a 100%);
+}
+.static-fallback p {
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-mono); font-size: 10px; color: var(--ink-dim); letter-spacing: 0.2em;
+}
