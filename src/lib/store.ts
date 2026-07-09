@@ -2,9 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Lang } from './i18n'
 import type { Tier } from './quality'
-
-// manter em sincronia com curve.ts (Task 4 troca por: import type { SectionId } from './curve')
-type SectionId = 'hero' | 'projects' | 'journey' | 'skills' | 'contact'
+import type { SectionId } from './curve'
 
 interface AppState {
   lang: Lang
