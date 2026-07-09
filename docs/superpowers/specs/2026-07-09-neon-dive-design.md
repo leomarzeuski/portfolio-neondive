@@ -49,7 +49,7 @@ Fim da linha: uma **cabine de transmissão retrô-futurista**. O form de contato
 
 ### Camadas transversais
 - **HUD persistente:** altímetro lateral discreto (profundidade da descida = progresso do scroll, com marcadores de seção clicáveis/âncoras), toggle PT ↔ EN, toggle de som, botão de settings (qualidade + áudio — padrão premiado do Cyber City Orion).
-- **Áudio (opt-in, desligado por padrão):** hum da cidade + chuva que muda por altitude, whoosh nas transições de camada. **Howler.js** (~7 KB gzip, padrão nos portfólios premiados; sprites e fade nativos).
+- **Áudio (opt-in, desligado por padrão):** hum da cidade + chuva que muda por altitude, whoosh nas transições de camada. **Web Audio procedural** (ruído filtrado + osciladores sintetizados em runtime — zero arquivos de áudio, zero download; padrão já validado no hermes).
 - **Transições de camada:** glitch de interferência de sinal rápido (chromatic aberration + scanline burst) ao cruzar fronteiras — costura temática entre "distritos".
 - **Easter egg:** Konami code (`↑↑↓↓←→←→BA`) — apagão total da cidade, tudo religa em modo synthwave rosa.
 - **Cursor:** rastro de "smear de neon" sutil no desktop (fiel ao material do mundo); nada no touch.
