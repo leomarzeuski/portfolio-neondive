@@ -1,5 +1,18 @@
 import { test, expect } from '@playwright/test'
 
+test.describe('boot', () => {
+  test('boot aparece e some sozinho', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByTestId('boot')).toBeVisible()
+    await expect(page.getByTestId('boot')).toBeHidden({ timeout: 15_000 })
+    await expect(page.locator('#hero .name')).toBeVisible()
+  })
+  test('?noboot=1 pula direto', async ({ page }) => {
+    await page.goto('/?noboot=1')
+    await expect(page.getByTestId('boot')).toHaveCount(0)
+  })
+})
+
 test.describe('seções e conteúdo', () => {
   test('5 seções com conteúdo real em EN (default)', async ({ page }) => {
     await page.goto('/')
@@ -17,7 +30,7 @@ test.describe('seções e conteúdo', () => {
 
 test.describe('hud', () => {
   test('toggle PT/EN troca o conteúdo e persiste', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/?noboot=1')
     await page.getByRole('button', { name: 'PT', exact: true }).click()
     await expect(page.locator('#hero')).toContainText('Olá, eu sou')
     await page.reload()
@@ -26,13 +39,13 @@ test.describe('hud', () => {
     await expect(page.locator('#hero')).toContainText("Hi, I'm")
   })
   test('settings define qualidade manual', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/?noboot=1')
     await page.getByRole('button', { name: /SETTINGS/i }).click()
     await page.getByLabel(/LOW|BAIXA/i).check()
     await expect(page.getByLabel(/LOW|BAIXA/i)).toBeChecked()
   })
   test('altímetro tem 5 marcadores-âncora', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/?noboot=1')
     await expect(page.locator('[data-testid="altimeter"] a')).toHaveCount(5)
   })
 })
@@ -100,7 +113,7 @@ test.describe('contato', () => {
 
 test.describe('modal de projeto', () => {
   test('abre pelo card DOM, mostra conteúdo real e fecha com ESC', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/?noboot=1')
     await page.locator('#projects .card', { hasText: 'GlassGPT' }).getByRole('button').click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()

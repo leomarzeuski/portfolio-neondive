@@ -12,6 +12,7 @@ import { usePrefersReducedMotion } from '@/lib/hooks'
 import Sections from '@/components/dom/Sections'
 import Hud from '@/components/dom/Hud'
 import ProjectModal from '@/components/dom/ProjectModal'
+import BootOverlay from '@/components/dom/BootOverlay'
 
 const WorldCanvas = dynamic(() => import('@/components/world/World'), { ssr: false })
 
@@ -83,6 +84,7 @@ export default function Experience() {
       </main>
       <Hud />
       <ProjectModal />
+      <BootOverlay />
     </>
   )
 
