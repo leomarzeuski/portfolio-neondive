@@ -52,6 +52,18 @@ test.describe('mundo 3d', () => {
   })
 })
 
+test.describe('cidade', () => {
+  test('mundo renderiza sem erros de console', async ({ page }) => {
+    const errors: string[] = []
+    page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()) })
+    await page.goto('/')
+    await expect(page.locator('.world canvas')).toBeVisible({ timeout: 15_000 })
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight * 0.3))
+    await page.waitForTimeout(1500)
+    expect(errors.filter((e) => e.includes('THREE') || e.includes('shader'))).toEqual([])
+  })
+})
+
 test.describe('mergulho por scroll', () => {
   test('scroll até o fim percorre as seções e enche o altímetro', async ({ page }) => {
     await page.goto('/')
