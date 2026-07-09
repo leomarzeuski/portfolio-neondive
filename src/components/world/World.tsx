@@ -9,6 +9,7 @@ import { useIsMobile, usePrefersReducedMotion } from '@/lib/hooks'
 import WorldEnv from './WorldEnv'
 import CameraRig from './CameraRig'
 import City from './City'
+import Effects from './Effects'
 
 function TierProbe({ isMobile }: { isMobile: boolean }) {
   const gpu = useDetectGPU()
@@ -39,6 +40,7 @@ export default function World() {
           {/* LAYERS — Tasks 9–17 penduram aqui: CameraRig, City, Rain, Cloud/Towers/Transit/Underground/Terminal, Effects */}
           <CameraRig reduced={reduced} />
           <City />
+          <Effects />
         </Suspense>
       </Canvas>
     </div>
