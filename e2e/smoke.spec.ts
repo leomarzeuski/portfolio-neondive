@@ -18,15 +18,11 @@ test.describe('seções e conteúdo', () => {
 test.describe('hud', () => {
   test('toggle PT/EN troca o conteúdo e persiste', async ({ page }) => {
     await page.goto('/')
-    await page.evaluate(() => localStorage.removeItem('neondive'))
-    await page.reload()
-    // Click language toggle button (first button in HUD controls)
-    await page.locator('[aria-label="HUD"] div > button').first().click()
+    await page.getByRole('button', { name: 'PT', exact: true }).click()
     await expect(page.locator('#hero')).toContainText('Olá, eu sou')
     await page.reload()
     await expect(page.locator('#hero')).toContainText('Olá, eu sou')
-    // Click language toggle button again
-    await page.locator('[aria-label="HUD"] div > button').first().click()
+    await page.getByRole('button', { name: 'EN', exact: true }).click()
     await expect(page.locator('#hero')).toContainText("Hi, I'm")
   })
   test('settings define qualidade manual', async ({ page }) => {
