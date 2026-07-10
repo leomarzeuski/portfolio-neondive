@@ -16,13 +16,18 @@ export default function Effects() {
   const [glitching, setGlitching] = useState(false)
 
   useEffect(() => {
-    return useApp.subscribe((s, prev) => {
+    let id: ReturnType<typeof setTimeout> | undefined
+    const unsub = useApp.subscribe((s, prev) => {
       if (s.activeSection !== prev.activeSection) {
         setGlitching(true)
-        const id = setTimeout(() => setGlitching(false), 420)
-        return () => clearTimeout(id)
+        clearTimeout(id)
+        id = setTimeout(() => setGlitching(false), 420)
       }
     })
+    return () => {
+      clearTimeout(id)
+      unsub()
+    }
   }, [])
 
   if (!p.bloom) return null
