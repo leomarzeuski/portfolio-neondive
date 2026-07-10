@@ -9,6 +9,13 @@ export const metadata: Metadata = {
   title: 'Leonardo Marzeuski · Fullstack Software Engineer · AI / LLM',
   description:
     'A cinematic dive through a neon city — the portfolio of Leonardo Marzeuski, Fullstack Software Engineer building AI-powered products end to end.',
+  keywords: ['Leonardo Marzeuski', 'Fullstack', 'AI', 'LLM', 'React', 'Next.js', 'Three.js', 'portfolio'],
+  openGraph: {
+    title: 'Leonardo Marzeuski · NEON DIVE',
+    description: 'A cinematic dive through a neon city — fullstack engineer, AI/LLM products end to end.',
+    type: 'website',
+  },
+  twitter: { card: 'summary_large_image' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
