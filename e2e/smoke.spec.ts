@@ -123,6 +123,18 @@ test.describe('modal de projeto', () => {
     await page.keyboard.press('Escape')
     await expect(dialog).toHaveCount(0)
   })
+  test('devolve o foco ao gatilho após fechar (teclado + ESC)', async ({ page }) => {
+    await page.goto('/?noboot=1')
+    const trigger = page.locator('#projects .card', { hasText: 'GlassGPT' }).getByRole('button')
+    await trigger.focus()
+    await trigger.press('Enter')
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await expect(dialog.getByRole('button', { name: /CLOSE|FECHAR/i })).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(dialog).toHaveCount(0)
+    await expect(trigger).toBeFocused()
+  })
 })
 
 test.describe('konami synthwave', () => {
@@ -149,5 +161,40 @@ test.describe('som', () => {
     await page.getByRole('button', { name: /SOUND ON|SOM ON/ }).click()
     await expect(page.getByRole('button', { name: /SOUND OFF|SOM OFF/ })).toHaveAttribute('aria-pressed', 'false')
     expect(errors).toEqual([])
+  })
+})
+
+test.describe('reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } })
+  test('sem boot, data-reduced, seções alcançáveis por scroll', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByTestId('boot')).toHaveCount(0)
+    await expect(page.locator('html')).toHaveAttribute('data-reduced', 'true')
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await expect(page.locator('html')).toHaveAttribute('data-section', 'contact', { timeout: 10_000 })
+    await expect(page.locator('#contact .socials a')).toHaveCount(4)
+  })
+})
+
+test.describe('a11y', () => {
+  test('skip-link é o primeiro elemento focável e leva ao conteúdo', async ({ page }) => {
+    await page.goto('/?noboot=1')
+    await page.keyboard.press('Tab')
+    const skip = page.locator('.skip-link')
+    await expect(skip).toBeFocused()
+    await expect(skip).toHaveAttribute('href', '#projects')
+  })
+  test('canvas e fallback estático são aria-hidden (conteúdo real é o DOM)', async ({ page }) => {
+    await page.goto('/?noboot=1')
+    await expect(page.locator('.world')).toHaveAttribute('aria-hidden', 'true')
+    await page.goto('/?tier=0')
+    await expect(page.locator('.static-fallback')).toHaveAttribute('aria-hidden', 'true')
+  })
+  test('settings expõe aria-expanded correto ao abrir/fechar', async ({ page }) => {
+    await page.goto('/?noboot=1')
+    const btn = page.getByRole('button', { name: /SETTINGS/i })
+    await expect(btn).toHaveAttribute('aria-expanded', 'false')
+    await btn.click()
+    await expect(btn).toHaveAttribute('aria-expanded', 'true')
   })
 })

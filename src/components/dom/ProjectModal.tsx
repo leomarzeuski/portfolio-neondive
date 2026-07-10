@@ -13,13 +13,18 @@ export default function ProjectModal() {
   const closeRef = useRef<HTMLButtonElement>(null)
 
   const project = PROJECTS.find((p) => p.id === openProjectId)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     if (!project) return
+    previousFocusRef.current = document.activeElement as HTMLElement | null
     closeRef.current?.focus()
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') openProject(null) }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      previousFocusRef.current?.focus()
+    }
   }, [project, openProject])
 
   if (!project) return null

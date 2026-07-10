@@ -6,6 +6,7 @@ import { useDetectGPU } from '@react-three/drei'
 import { useApp, effectiveTier } from '@/lib/store'
 import { profileFor, tierFrom } from '@/lib/quality'
 import { useIsMobile, usePrefersReducedMotion } from '@/lib/hooks'
+import VisibilityPause from './VisibilityPause'
 import WorldEnv from './WorldEnv'
 import CameraRig from './CameraRig'
 import City from './City'
@@ -41,6 +42,7 @@ export default function World() {
         gl={{ antialias: false, powerPreference: 'high-performance' }}
       >
         <Suspense fallback={null}>
+          <VisibilityPause />
           <TierProbe isMobile={isMobile} />
           <WorldEnv />
           {/* LAYERS — Tasks 9–17 penduram aqui: CameraRig, City, Rain, Cloud/Towers/Transit/Underground/Terminal, Effects */}
