@@ -45,7 +45,7 @@ export default function ProjectModal() {
   if (!project) return null
 
   return (
-    <div className={styles.backdrop} onClick={() => openProject(null)}>
+    <div className={styles.backdrop} data-lenis-prevent onClick={() => openProject(null)}>
       <div
         className={styles.dialog}
         role="dialog"

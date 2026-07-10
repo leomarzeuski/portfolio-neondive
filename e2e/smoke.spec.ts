@@ -1,4 +1,33 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page, type Locator } from '@playwright/test'
+
+// espera o scroll parar de se mover sozinho (snap-to-label do ScrollTrigger da
+// CameraRig, que assenta na label mais próxima após qualquer scroll — inclusive um
+// scrollIntoView — e é independente de wheel/Lenis) antes de medir um efeito
+// colateral de wheel/gesto, senão esse assentamento de fundo se confunde com o que
+// está sendo medido.
+async function waitForScrollToSettle(page: Page, maxMs = 12_000, requiredStableMs = 4_000) {
+  let last = -1
+  let stableSince = Date.now()
+  const deadline = Date.now() + maxMs
+  while (Date.now() < deadline) {
+    const y = await page.evaluate(() => window.scrollY)
+    if (y !== last) { stableSince = Date.now(); last = y }
+    else if (Date.now() - stableSince >= requiredStableMs) return
+    await page.waitForTimeout(200)
+  }
+}
+
+// rola via wheel (fluxo normal do Lenis) até o locator estar plenamente na viewport,
+// evitando o scrollIntoView automático do Playwright em .click()/.focus() — que
+// dispara o mesmo snap-to-label acima e contaminaria a medição do teste.
+async function wheelUntilInView(page: Page, locator: Locator) {
+  for (let i = 0; i < 15; i++) {
+    const box = await locator.boundingBox()
+    if (box && box.y >= 0 && box.y + box.height <= 800) return
+    await page.mouse.wheel(0, 400)
+    await page.waitForTimeout(150)
+  }
+}
 
 test.describe('boot', () => {
   test('boot aparece e some sozinho', async ({ page }) => {
@@ -134,6 +163,29 @@ test.describe('modal de projeto', () => {
     await page.keyboard.press('Escape')
     await expect(dialog).toHaveCount(0)
     await expect(trigger).toBeFocused()
+  })
+  test('wheel sobre o modal aberto não move o mergulho', async ({ page }) => {
+    test.slow()
+    await page.goto('/?noboot=1')
+    await expect(page.locator('.world canvas')).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('html')).toHaveAttribute('data-section', 'hero')
+    const card = page.locator('#projects .card', { hasText: 'GlassGPT' }).getByRole('button')
+    // rola manualmente via wheel (fluxo normal do Lenis) até o card entrar em
+    // viewport, em vez de deixar o .click() do Playwright disparar seu próprio
+    // scrollIntoView — que acionaria o snap-to-label da CameraRig (ver helpers
+    // acima) bem no meio da janela de medição do teste.
+    await wheelUntilInView(page, card)
+    await waitForScrollToSettle(page)
+    await card.click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+    const before = await page.evaluate(() => window.scrollY)
+    const sectionBefore = await page.locator('html').getAttribute('data-section')
+    for (let i = 0; i < 12; i++) await page.mouse.wheel(0, 600)
+    const after = await page.evaluate(() => window.scrollY)
+    expect(Math.abs(after - before)).toBeLessThan(20)
+    await expect(page.locator('html')).toHaveAttribute('data-section', sectionBefore ?? '')
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('dialog')).toHaveCount(0)
   })
 })
 
