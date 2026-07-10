@@ -15,6 +15,9 @@ import CloudLayer from './layers/CloudLayer'
 import Rain from './Rain'
 import TowersLayer from './layers/TowersLayer'
 import Traffic from './Traffic'
+import Atmosphere from './Atmosphere'
+import Drones from './Drones'
+import Skyways from './Skyways'
 import TransitLayer from './layers/TransitLayer'
 import UndergroundLayer from './layers/UndergroundLayer'
 import TerminalLayer from './layers/TerminalLayer'
@@ -59,6 +62,9 @@ export default function World() {
             <Rain />
             <TowersLayer />
             <Traffic />
+            <Atmosphere />
+            <Drones />
+            <Skyways />
             <TransitLayer />
             <UndergroundLayer />
             <TerminalLayer />
