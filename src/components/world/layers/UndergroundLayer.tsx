@@ -22,7 +22,10 @@ const RACK_COUNT = 60
 
 function Racks() {
   const ref = useRef<THREE.InstancedMesh>(null)
-  const texture = useMemo(() => makeFacadeTexture({ cols: 4, rows: 10, litRatio: 0.55 }, mulberry32(4242)), [])
+  const texture = useMemo(
+    () => makeFacadeTexture({ cols: 4, rows: 10, baseLit: 0.62, topLit: 0.5, colors: ['#7fe6ff', '#5eead4', '#a9f1ff', '#c9a9ff'] }, mulberry32(4242)),
+    [],
+  )
 
   useLayoutEffect(() => {
     const mesh = ref.current

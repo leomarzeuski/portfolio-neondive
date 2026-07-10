@@ -3,8 +3,9 @@
 import { useApp } from '@/lib/store'
 
 export const PALETTE = {
-  normal: { bg: '#050510', fog: '#0a0a1c' },
-  synthwave: { bg: '#12030f', fog: '#2a0a24' },
+  // névoa um pouco mais clara que o fundo → silhueta dos prédios em contraluz
+  normal: { bg: '#050510', fog: '#0d0d24' },
+  synthwave: { bg: '#12030f', fog: '#2c0d2a' },
 } as const
 
 export default function WorldEnv() {

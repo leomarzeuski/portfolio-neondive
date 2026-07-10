@@ -45,7 +45,10 @@ export default function CloudLayer() {
   const tier = useApp((s) => effectiveTier(s))
   const isMobile = useIsMobile()
   const p = profileFor(tier, isMobile)
-  const towerTexture = useMemo(() => makeFacadeTexture({ cols: 8, rows: 40, litRatio: 0.22 }, mulberry32(99)), [])
+  const towerTexture = useMemo(
+    () => makeFacadeTexture({ cols: 8, rows: 40, baseLit: 0.3, topLit: 0.16, colors: ['#9fd8ff', '#cfe0ff', '#eaf3ff', '#ffc98f'] }, mulberry32(99)),
+    [],
+  )
 
   return (
     <group>
