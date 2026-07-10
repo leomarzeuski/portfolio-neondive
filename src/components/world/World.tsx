@@ -2,10 +2,11 @@
 
 import { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { useDetectGPU } from '@react-three/drei'
+import { useDetectGPU, PerformanceMonitor } from '@react-three/drei'
 import { useApp, effectiveTier } from '@/lib/store'
 import { profileFor, tierFrom } from '@/lib/quality'
 import { useIsMobile, usePrefersReducedMotion } from '@/lib/hooks'
+import AdaptiveQuality, { degradeTier } from './AdaptiveQuality'
 import VisibilityPause from './VisibilityPause'
 import WorldEnv from './WorldEnv'
 import CameraRig from './CameraRig'
@@ -42,19 +43,22 @@ export default function World() {
         gl={{ antialias: false, powerPreference: 'high-performance' }}
       >
         <Suspense fallback={null}>
-          <VisibilityPause />
-          <TierProbe isMobile={isMobile} />
-          <WorldEnv />
-          {/* LAYERS — Tasks 9–17 penduram aqui: CameraRig, City, Rain, Cloud/Towers/Transit/Underground/Terminal, Effects */}
-          <CameraRig reduced={reduced} />
-          <City />
-          <CloudLayer />
-          <Rain />
-          <TowersLayer />
-          <TransitLayer />
-          <UndergroundLayer />
-          <TerminalLayer />
-          <Effects />
+          <PerformanceMonitor factor={1} flipflops={3} onDecline={degradeTier} onFallback={degradeTier}>
+            <AdaptiveQuality />
+            <VisibilityPause />
+            <TierProbe isMobile={isMobile} />
+            <WorldEnv />
+            {/* LAYERS — Tasks 9–17 penduram aqui: CameraRig, City, Rain, Cloud/Towers/Transit/Underground/Terminal, Effects */}
+            <CameraRig reduced={reduced} />
+            <City />
+            <CloudLayer />
+            <Rain />
+            <TowersLayer />
+            <TransitLayer />
+            <UndergroundLayer />
+            <TerminalLayer />
+            <Effects />
+          </PerformanceMonitor>
         </Suspense>
       </Canvas>
     </div>
