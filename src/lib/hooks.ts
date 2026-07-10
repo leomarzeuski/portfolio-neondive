@@ -1,23 +1,27 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
+
+function subscribeMedia(query: string) {
+  return (onChange: () => void) => {
+    const mq = window.matchMedia(query)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }
+}
 
 export function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setReduced(mq.matches)
-    update()
-    mq.addEventListener('change', update)
-    return () => mq.removeEventListener('change', update)
-  }, [])
-  return reduced
+  return useSyncExternalStore(
+    subscribeMedia('(prefers-reduced-motion: reduce)'),
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    () => false,
+  )
 }
 
 export function useIsMobile(): boolean {
-  const [mobile, setMobile] = useState(false)
-  useEffect(() => {
-    setMobile(window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 760)
-  }, [])
-  return mobile
+  return useSyncExternalStore(
+    subscribeMedia('(pointer: coarse), (max-width: 759px)'),
+    () => window.matchMedia('(pointer: coarse), (max-width: 759px)').matches,
+    () => false,
+  )
 }

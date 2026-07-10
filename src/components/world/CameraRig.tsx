@@ -13,8 +13,8 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 export default function CameraRig({ reduced = false }: { reduced?: boolean }) {
   const camera = useThree((s) => s.camera)
-  const camRail = useMemo(createCamRail, [])
-  const lookRail = useMemo(createLookRail, [])
+  const camRail = useMemo(() => createCamRail(), [])
+  const lookRail = useMemo(() => createLookRail(), [])
   const proxy = useRef({ t: 0 })
   const smooth = useRef(0)
   const lastSection = useRef<SectionId>('hero')

@@ -62,14 +62,15 @@ export default function Experience() {
   useEffect(() => {
     document.documentElement.dataset.reduced = String(reduced)
     if (reduced) return
+    const lenis = lenisRef.current?.lenis
     const update = () => ScrollTrigger.update()
     const raf = (time: number) => lenisRef.current?.lenis?.raf(time * 1000)
-    lenisRef.current?.lenis?.on('scroll', update)
+    lenis?.on('scroll', update)
     gsap.ticker.add(raf)
     gsap.ticker.lagSmoothing(0)
     return () => {
       gsap.ticker.remove(raf)
-      lenisRef.current?.lenis?.off('scroll', update)
+      lenis?.off('scroll', update)
     }
   }, [reduced])
 
@@ -79,6 +80,8 @@ export default function Experience() {
     if (forced !== null && ['0', '1', '2', '3'].includes(forced)) {
       setTierOverride(Number(forced) as Tier)
     }
+    // detecção de capacidade só existe pós-mount — setState único, não é loop
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setWebgl(webglSupported())
   }, [setTierOverride])
 

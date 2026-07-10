@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
-import * as THREE from 'three'
+import { useEffect, useRef } from 'react'
+import type { ShaderMaterial } from 'three'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import { NEON_FONT } from '@/lib/content'
@@ -17,12 +17,18 @@ const KEY_COLORS: [number, number, number][] = [
 ]
 
 export default function TerminalLayer() {
-  const screen = useMemo(() => createHologramMaterial('#22d3ee'), [])
+  const screen = useRef<ShaderMaterial | null>(null)
+  const screenMat = (screen.current ??= createHologramMaterial('#22d3ee'))
   const time = useRef(0)
+
+  useEffect(() => {
+    const current = screen.current
+    return () => current?.dispose()
+  }, [])
 
   useFrame((_, delta) => {
     time.current += delta
-    screen.uniforms.uTime.value = time.current
+    if (screen.current) screen.current.uniforms.uTime.value = time.current
   })
 
   return (
@@ -35,7 +41,7 @@ export default function TerminalLayer() {
       {/* tela holográfica */}
       <mesh position={[0, 3.4, 0.15]}>
         <planeGeometry args={[5.4, 3.6]} />
-        <primitive object={screen} attach="material" />
+        <primitive object={screenMat} attach="material" />
       </mesh>
       <Text font={NEON_FONT} fontSize={0.72} anchorX="center" position={[0, 6.2, 0.2]}>
         OPEN CHANNEL

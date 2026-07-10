@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
@@ -18,10 +18,16 @@ function Billboard({ index }: { index: number }) {
   const openProject = useApp((s) => s.openProject)
   const lang = useApp((s) => s.lang)
   const group = useRef<THREE.Group>(null)
-  const material = useMemo(() => createHologramMaterial(HOLO_COLORS[index % HOLO_COLORS.length]), [index])
+  const material = useRef<THREE.ShaderMaterial | null>(null)
+  const mat = (material.current ??= createHologramMaterial(HOLO_COLORS[index % HOLO_COLORS.length]))
+
+  useEffect(() => {
+    const current = material.current
+    return () => current?.dispose()
+  }, [])
 
   useFrame(({ clock }) => {
-    material.uniforms.uTime.value = clock.elapsedTime + index * 7.3
+    if (material.current) material.current.uniforms.uTime.value = clock.elapsedTime + index * 7.3
     if (group.current) {
       group.current.position.y = spec.pos[1] + Math.sin(clock.elapsedTime * 0.6 + index) * 0.8
     }
@@ -41,7 +47,7 @@ function Billboard({ index }: { index: number }) {
         onPointerOut={() => { document.body.style.cursor = 'auto' }}
       >
         <planeGeometry args={[24, 14]} />
-        <primitive object={material} attach="material" />
+        <primitive object={mat} attach="material" />
       </mesh>
 
       <Text font={NEON_FONT} fontSize={2.4} anchorX="center" position={[0, 2.4, 0.25]}>
