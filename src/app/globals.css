@@ -16,6 +16,8 @@ html {
   color: var(--ink);
   scroll-behavior: smooth;
 }
+/* Lenis é o único dono do scroll — sem smooth nativo competindo com o snap */
+html.lenis { scroll-behavior: auto; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
