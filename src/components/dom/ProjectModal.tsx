@@ -15,9 +15,24 @@ export default function ProjectModal() {
   const project = PROJECTS.find((p) => p.id === openProjectId)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
+  // trava o scroll e torna o fundo inerte enquanto o modal está aberto.
+  // declarado ANTES do effect de foco: cleanups rodam em ordem de declaração,
+  // então o inert sai do gatilho antes do foco ser devolvido a ele.
   useEffect(() => {
     if (!project) return
+    // captura o foco anterior ANTES do inert — inert num ancestral desfoca o gatilho
     previousFocusRef.current = document.activeElement as HTMLElement | null
+    document.body.style.overflow = 'hidden'
+    const bg = [document.getElementById('scroll-root'), document.getElementById('hud')]
+    bg.forEach((el) => el?.setAttribute('inert', ''))
+    return () => {
+      bg.forEach((el) => el?.removeAttribute('inert'))
+      document.body.style.overflow = ''
+    }
+  }, [project])
+
+  useEffect(() => {
+    if (!project) return
     closeRef.current?.focus()
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') openProject(null) }
     window.addEventListener('keydown', onKey)

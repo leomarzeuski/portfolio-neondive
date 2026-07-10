@@ -41,7 +41,9 @@ function Billboard({ index }: { index: number }) {
         <meshBasicMaterial color="#12162a" />
       </mesh>
 
+      {/* renderOrder no objeto real — three ignora renderOrder em Group */}
       <mesh
+        renderOrder={5}
         onClick={(e) => { e.stopPropagation(); openProject(project.id) }}
         onPointerOver={() => { document.body.style.cursor = 'pointer' }}
         onPointerOut={() => { document.body.style.cursor = 'auto' }}
@@ -66,7 +68,7 @@ function Billboard({ index }: { index: number }) {
 
 export default function TowersLayer() {
   return (
-    <group renderOrder={5}>
+    <group>
       {PROJECTS.map((p, i) => <Billboard key={p.id} index={i} />)}
     </group>
   )

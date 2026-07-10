@@ -34,7 +34,7 @@ export default function Hud() {
   }, [synthwave])
 
   return (
-    <div className={styles.hud} aria-label="HUD">
+    <div id="hud" className={styles.hud} aria-label="HUD">
       <div className={styles.controls}>
         <button type="button" onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}>
           {lang === 'en' ? 'PT' : 'EN'}

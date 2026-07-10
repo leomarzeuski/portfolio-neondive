@@ -72,8 +72,9 @@ export default function Rain() {
   if (count === 0) return null
 
   return (
-    <group ref={group} renderOrder={10}>
-      <points frustumCulled={false}>
+    <group ref={group}>
+      {/* renderOrder no objeto real — three ignora renderOrder em Group */}
+      <points renderOrder={10} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
           <bufferAttribute attach="attributes-aOffset" args={[offsets, 1]} />
