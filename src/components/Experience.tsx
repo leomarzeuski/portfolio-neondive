@@ -10,6 +10,7 @@ import { t } from '@/lib/i18n'
 import type { Tier } from '@/lib/quality'
 import { usePrefersReducedMotion } from '@/lib/hooks'
 import { createKonami } from '@/lib/konami'
+import { createCityAudio, type CityAudio } from '@/lib/audio'
 import Sections from '@/components/dom/Sections'
 import Hud from '@/components/dom/Hud'
 import ProjectModal from '@/components/dom/ProjectModal'
@@ -35,9 +36,11 @@ export default function Experience() {
   const tier = useApp((s) => effectiveTier(s))
   const setTierOverride = useApp((s) => s.setTierOverride)
   const synthwave = useApp((s) => s.synthwave)
+  const soundOn = useApp((s) => s.soundOn)
   const [webgl, setWebgl] = useState<boolean | null>(null)
   const reduced = usePrefersReducedMotion()
   const lenisRef = useRef<LenisRef>(null)
+  const audioRef = useRef<CityAudio | null>(null)
 
   useEffect(() => {
     const feed = createKonami(() => useApp.getState().toggleSynthwave())
@@ -82,6 +85,22 @@ export default function Experience() {
   useEffect(() => {
     document.documentElement.dataset.tier = String(webgl === false ? 0 : tier)
   }, [tier, webgl])
+
+  useEffect(() => {
+    if (soundOn) {
+      audioRef.current ??= createCityAudio()
+      audioRef.current.start()
+      const depthId = setInterval(() => {
+        const dive = Number(getComputedStyle(document.documentElement).getPropertyValue('--dive')) || 0
+        audioRef.current?.setDepth(dive)
+      }, 250)
+      const unsub = useApp.subscribe((s, prev) => {
+        if (s.activeSection !== prev.activeSection) audioRef.current?.whoosh()
+      })
+      return () => { clearInterval(depthId); unsub() }
+    }
+    audioRef.current?.stop()
+  }, [soundOn])
 
   const show3d = webgl === true && tier > 0
 

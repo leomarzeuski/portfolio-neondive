@@ -137,3 +137,17 @@ test.describe('konami synthwave', () => {
     await expect(page.locator('body')).not.toHaveClass(/synthwave/)
   })
 })
+
+test.describe('som', () => {
+  test('toggle de som alterna estado sem erros', async ({ page }) => {
+    const errors: string[] = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.goto('/?noboot=1')
+    const btn = page.getByRole('button', { name: /SOUND OFF|SOM OFF/ })
+    await btn.click()
+    await expect(page.getByRole('button', { name: /SOUND ON|SOM ON/ })).toHaveAttribute('aria-pressed', 'true')
+    await page.getByRole('button', { name: /SOUND ON|SOM ON/ }).click()
+    await expect(page.getByRole('button', { name: /SOUND OFF|SOM OFF/ })).toHaveAttribute('aria-pressed', 'false')
+    expect(errors).toEqual([])
+  })
+})
