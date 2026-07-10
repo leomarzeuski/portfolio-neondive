@@ -51,8 +51,22 @@ main#scroll-root { position: relative; z-index: 1; pointer-events: none; }
   backdrop-filter: blur(10px); border-radius: 4px;
   max-height: 80vh; overflow-y: auto;
 }
+/* thin themed scrollbar on the panels (replaces the chunky default) */
+.panel {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--cyan) 42%, transparent) transparent;
+}
+.panel::-webkit-scrollbar { width: 8px; height: 8px; }
+.panel::-webkit-scrollbar-track { background: transparent; }
+.panel::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--cyan) 32%, transparent);
+  border-radius: 999px;
+}
+.panel::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--cyan) 52%, transparent);
+}
 .panel-center { text-align: center; align-self: center; top: auto; }
-.sec-hero .panel { margin-top: 14vh; background: transparent; border: none; backdrop-filter: none; }
+.sec-hero .panel { margin-top: 14vh; background: transparent; border: none; backdrop-filter: none; max-height: none; overflow: visible; }
 .sec-contact .panel { margin-bottom: 8vh; }
 
 .badge {
