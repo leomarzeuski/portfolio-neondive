@@ -46,7 +46,10 @@ export default function World() {
           <PerformanceMonitor factor={1} flipflops={3} onDecline={degradeTier} onFallback={degradeTier}>
             <AdaptiveQuality />
             <VisibilityPause />
-            <TierProbe isMobile={isMobile} />
+            {/* useDetectGPU suspende — boundary próprio para não segurar o primeiro paint do mundo */}
+            <Suspense fallback={null}>
+              <TierProbe isMobile={isMobile} />
+            </Suspense>
             <WorldEnv />
             {/* LAYERS — Tasks 9–17 penduram aqui: CameraRig, City, Rain, Cloud/Towers/Transit/Underground/Terminal, Effects */}
             <CameraRig reduced={reduced} />
